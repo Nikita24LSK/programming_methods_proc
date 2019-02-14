@@ -6,7 +6,7 @@ int main(int argc, char *argv[]) {
 	FILE *inp, *out;
 
 	if (argc != 3) {
-		printf("\nUsage lab1 <input_file> <output_file>\n");
+		printf("\nUsage lab_proc <input_file> <output_file>\n");
 		return 1;
 	}
 
