@@ -11,12 +11,12 @@ int main(int argc, char *argv[]) {
 	}
 
 	if ((inp = fopen(argv[1], "r")) == NULL) {
-		printf("\nCannot to open input file!\n");
+		printf("\nCould not to open input file!\n");
 		return 1;
 	}
 
 	if ((out = fopen(argv[2], "w")) == NULL) {
-		printf("\nCannot to open output file!\n");
+		printf("\nCould not to open output file!\n");
 		return 1;
 	}
 
