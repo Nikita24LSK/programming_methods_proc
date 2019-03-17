@@ -1,6 +1,6 @@
 all: lab_proc
 	
-lab1: main.o interfaces.o
+lab_proc: main.o interfaces.o
 	gcc main.o interfaces.o -o lab_proc
 
 main.o: main.c
