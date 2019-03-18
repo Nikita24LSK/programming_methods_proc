@@ -4,25 +4,25 @@
 
 void input_truck(struct truck *inpTruck, FILE *inpFile) {
 
-	fscanf(inpFile, "%i %i", &(inpTruck->loadCapacity), &(inpTruck->enginePower));
+	fscanf(inpFile, "%i %i %lf", &(inpTruck->loadCapacity), &(inpTruck->enginePower), &(inpTruck->consumption));
 
 }
 
 void output_truck(struct truck *optTruck, FILE *optFile) {
 
-	fprintf(optFile, "Truck\tLoad capacity: %i\tEngine power: %i\n", optTruck->loadCapacity, optTruck->enginePower);
+	fprintf(optFile, "Truck\tLoad capacity: %i\tEngine power: %i\tConsumption: %.3lf\n", optTruck->loadCapacity, optTruck->enginePower, optTruck->consumption);
 
 }
 
 void input_bus(struct bus *inpBus, FILE *inpFile) {
 
-	fscanf(inpFile, "%hu %i", &(inpBus->passCapacity), &(inpBus->enginePower));
+	fscanf(inpFile, "%hu %i %lf", &(inpBus->passCapacity), &(inpBus->enginePower), &(inpBus->consumption));
 
 }
 
 void output_bus(struct bus *optBus, FILE *optFile) {
 
-	fprintf(optFile, "Bus\tPassengers capacity: %hu\tEngine power: %i\n", optBus->passCapacity, optBus->enginePower);
+	fprintf(optFile, "Bus\tPassengers capacity: %hu\tEngine power: %i\tConsumption: %.3lf\n", optBus->passCapacity, optBus->enginePower, optBus->consumption);
 
 }
 
