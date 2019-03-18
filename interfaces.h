@@ -1,4 +1,4 @@
-enum typeOfTransport {TRUCK, BUS};
+enum typeOfTransport {TRUCK, BUS, CAR};
 
 struct truck {
 	int loadCapacity, enginePower;
@@ -9,12 +9,18 @@ struct bus {
 	int enginePower;
 };
 
+struct car {
+	short passCapacity, maxSpeed;
+	int enginePower;
+};
+
 struct transport {
 	enum typeOfTransport key;
 	union
 	{
 		struct truck tr;
 		struct bus bs;
+		struct car cr;
 	};
 };
 
@@ -33,6 +39,8 @@ void input_truck(struct truck *, FILE *);
 void output_truck(struct truck *, FILE *);
 void input_bus(struct bus *, FILE *);
 void output_bus(struct bus *, FILE *);
+void input_car(struct car *, FILE *);
+void output_car(struct car *, FILE *);
 struct transport *input_transport(FILE *);
 void output_transport(struct transport *, FILE *);
 char list_add_node(struct ringList *, FILE *);

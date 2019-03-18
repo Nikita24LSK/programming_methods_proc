@@ -26,6 +26,14 @@ void output_bus(struct bus *optBus, FILE *optFile) {
 
 }
 
+void input_car(struct car *inpCar, FILE *inpFile) {
+	fscanf(inpFile, "%hu %i %hu", &(inpCar->passCapacity), &(inpCar->enginePower), &(inpCar->maxSpeed));
+}
+
+void output_car(struct car *optCar, FILE *optFile) {
+	fprintf(optFile, "Car\tPassengers capacity: %hu\tEngine power: %i\tMax speed: %hu\n", optCar->passCapacity, optCar->enginePower, optCar->maxSpeed);
+}
+
 struct transport *input_transport(FILE *inpFile) {
 
 	struct transport *inpTransport = (struct transport *)malloc(sizeof(struct transport));
@@ -41,6 +49,10 @@ struct transport *input_transport(FILE *inpFile) {
 		case 2:
 			inpTransport->key = BUS;
 			input_bus(&(inpTransport->bs), inpFile);
+			break;
+		case 3:
+			inpTransport->key = CAR;
+			input_car(&(inpTransport->cr), inpFile);
 			break;
 		default:
 			free(inpTransport);
@@ -60,6 +72,9 @@ void output_transport(struct transport *optTransport, FILE *optFile) {
 			break;
 		case BUS:
 			output_bus(&(optTransport->bs), optFile);
+			break;
+		case CAR:
+			output_car(&(optTransport->cr), optFile);
 			break;
 		default:
 			break;
