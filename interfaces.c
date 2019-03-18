@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <malloc.h>
 #include "interfaces.h"
+#define WITH_BUS 1
+#define WITHOUT_BUS 0
 
 void input_truck(struct truck *inpTruck, FILE *inpFile) {
 
@@ -20,9 +22,14 @@ void input_bus(struct bus *inpBus, FILE *inpFile) {
 
 }
 
-void output_bus(struct bus *optBus, FILE *optFile) {
+void output_bus(struct bus *optBus, FILE *optFile, char bus_flag) {
 
-	fprintf(optFile, "Bus\tPassengers capacity: %hu\tEngine power: %i\n", optBus->passCapacity, optBus->enginePower);
+	if (bus_flag) {
+		fprintf(optFile, "Bus\tPassengers capacity: %hu\tEngine power: %i\n", optBus->passCapacity, optBus->enginePower);
+	}
+	else {
+		fprintf(optFile, "\n");
+	}
 
 }
 
@@ -52,14 +59,14 @@ struct transport *input_transport(FILE *inpFile) {
 
 }
 
-void output_transport(struct transport *optTransport, FILE *optFile) {
+void output_transport(struct transport *optTransport, FILE *optFile, char bus_flag) {
 
 	switch (optTransport->key) {
 		case TRUCK:
 			output_truck(&(optTransport->tr), optFile);
 			break;
 		case BUS:
-			output_bus(&(optTransport->bs), optFile);
+			output_bus(&(optTransport->bs), optFile, bus_flag);
 			break;
 		default:
 			break;
@@ -93,7 +100,7 @@ char list_add_node(struct ringList *workList, FILE *inpFile) {
 
 }
 
-void output_node(struct nodeOfList *firstNode, int offset, FILE *optFile) {
+void output_node(struct nodeOfList *firstNode, int offset, FILE *optFile, char bus_flag) {
 
 	struct nodeOfList *curNode = firstNode;
 	int i;
@@ -102,7 +109,7 @@ void output_node(struct nodeOfList *firstNode, int offset, FILE *optFile) {
 		curNode = curNode->next;
 	}
 
-	output_transport(curNode->automobile, optFile);
+	output_transport(curNode->automobile, optFile, bus_flag);
 
 }
 
@@ -162,7 +169,13 @@ void out_list(struct ringList *list, FILE *optFile) {
 	}
 
 	for (i = 0; i < list->size; i++) {
-		output_node(list->head, i, optFile);
+		output_node(list->head, i, optFile, WITH_BUS);
+	}
+
+	fprintf(optFile, "\nWithout bus\n");
+
+	for (i = 0; i < list->size; i++) {
+		output_node(list->head, i, optFile, WITHOUT_BUS);
 	}
 
 }

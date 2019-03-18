@@ -32,11 +32,11 @@ struct ringList {
 void input_truck(struct truck *, FILE *);
 void output_truck(struct truck *, FILE *);
 void input_bus(struct bus *, FILE *);
-void output_bus(struct bus *, FILE *);
+void output_bus(struct bus *, FILE *, char );
 struct transport *input_transport(FILE *);
-void output_transport(struct transport *, FILE *);
+void output_transport(struct transport *, FILE *, char );
 char list_add_node(struct ringList *, FILE *);
-void output_node(struct nodeOfList *, int , FILE *);
+void output_node(struct nodeOfList *, int , FILE *, char );
 void init_list(struct ringList *);
 void clear_list(struct ringList *);
 void fill_list(struct ringList *, FILE *);
