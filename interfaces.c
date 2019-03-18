@@ -4,25 +4,37 @@
 
 void input_truck(struct truck *inpTruck, FILE *inpFile) {
 
-	fscanf(inpFile, "%i %i", &(inpTruck->loadCapacity), &(inpTruck->enginePower));
+	fscanf(inpFile, "%u %u", &(inpTruck->loadCapacity), &(inpTruck->enginePower));
 
 }
 
 void output_truck(struct truck *optTruck, FILE *optFile) {
 
-	fprintf(optFile, "Truck\tLoad capacity: %i\tEngine power: %i\n", optTruck->loadCapacity, optTruck->enginePower);
+	fprintf(optFile, "Truck\tLoad capacity: %u\tEngine power: %u\tAttitude: %lf\n", optTruck->loadCapacity, optTruck->enginePower, attitude_truck(optTruck->loadCapacity, optTruck->enginePower));
 
+}
+
+double attitude_truck(unsigned int loadCapacity, unsigned int enginePower) {
+
+	return (double)loadCapacity/(double)enginePower;
+	
 }
 
 void input_bus(struct bus *inpBus, FILE *inpFile) {
 
-	fscanf(inpFile, "%hu %i", &(inpBus->passCapacity), &(inpBus->enginePower));
+	fscanf(inpFile, "%hu %u", &(inpBus->passCapacity), &(inpBus->enginePower));
 
 }
 
 void output_bus(struct bus *optBus, FILE *optFile) {
 
-	fprintf(optFile, "Bus\tPassengers capacity: %hu\tEngine power: %i\n", optBus->passCapacity, optBus->enginePower);
+	fprintf(optFile, "Bus\tPassengers capacity: %hu\tEngine power: %u\tAttitude: %lf\n", optBus->passCapacity, optBus->enginePower, attitude_bus(optBus->passCapacity, optBus->enginePower));
+
+}
+
+double attitude_bus(unsigned short passCapacity, unsigned int enginePower) {
+
+	return (double)(passCapacity*75)/(double)enginePower;
 
 }
 

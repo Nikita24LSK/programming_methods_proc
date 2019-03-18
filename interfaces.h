@@ -1,12 +1,12 @@
 enum typeOfTransport {TRUCK, BUS};
 
 struct truck {
-	int loadCapacity, enginePower;
+	unsigned int loadCapacity, enginePower;
 };
 
 struct bus {
-	short passCapacity;
-	int enginePower;
+	unsigned short passCapacity;
+	unsigned int enginePower;
 };
 
 struct transport {
@@ -33,6 +33,8 @@ void input_truck(struct truck *, FILE *);
 void output_truck(struct truck *, FILE *);
 void input_bus(struct bus *, FILE *);
 void output_bus(struct bus *, FILE *);
+double attitude_truck(unsigned int loadCapacity, unsigned int enginePower);
+double attitude_bus(unsigned short passCapacity, unsigned int enginePower);
 struct transport *input_transport(FILE *);
 void output_transport(struct transport *, FILE *);
 char list_add_node(struct ringList *, FILE *);
