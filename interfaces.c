@@ -22,14 +22,9 @@ void input_bus(struct bus *inpBus, FILE *inpFile) {
 
 }
 
-void output_bus(struct bus *optBus, FILE *optFile, char bus_flag) {
+void output_bus(struct bus *optBus, FILE *optFile) {
 
-	if (bus_flag) {
-		fprintf(optFile, "Bus\tPassengers capacity: %hu\tEngine power: %i\n", optBus->passCapacity, optBus->enginePower);
-	}
-	else {
-		fprintf(optFile, "\n");
-	}
+	fprintf(optFile, "Bus\tPassengers capacity: %hu\tEngine power: %i\n", optBus->passCapacity, optBus->enginePower);
 
 }
 
@@ -66,7 +61,9 @@ void output_transport(struct transport *optTransport, FILE *optFile, char bus_fl
 			output_truck(&(optTransport->tr), optFile);
 			break;
 		case BUS:
-			output_bus(&(optTransport->bs), optFile, bus_flag);
+			if (bus_flag) {
+				output_bus(&(optTransport->bs), optFile);
+			}
 			break;
 		default:
 			break;
