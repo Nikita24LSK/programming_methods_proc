@@ -1,16 +1,16 @@
 enum typeOfTransport {TRUCK, BUS};
 
 struct truck {
-	int loadCapacity, enginePower;
+	int loadCapacity;
 };
 
 struct bus {
 	short passCapacity;
-	int enginePower;
 };
 
 struct transport {
 	enum typeOfTransport key;
+	int enginePower;
 	union
 	{
 		struct truck tr;
