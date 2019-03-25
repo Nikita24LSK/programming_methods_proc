@@ -78,23 +78,7 @@ void output_transport(struct transport *optTransport, FILE *optFile) {
 
 char compare_transport(struct transport *first, struct transport *second) {
 
-	double att_first, att_second;
-
-	if (first->key == TRUCK) {
-		att_first = attitude_truck(first->tr.loadCapacity, first->enginePower);
-	}
-	else {
-		att_first = attitude_bus(first->bs.passCapacity, first->enginePower);
-	}
-
-	if (second->key == TRUCK) {
-		att_second = attitude_truck(second->tr.loadCapacity, second->enginePower);
-	}
-	else {
-		att_second = attitude_bus(second->bs.passCapacity, second->enginePower);
-	}
-
-	return att_first < att_second;
+	return attitude_transport(first) < attitude_transport(second);
 
 }
 
@@ -162,11 +146,11 @@ struct nodeOfList *get_node(struct nodeOfList *head, int offset) {
 }
 
 void swap_nodes(struct nodeOfList *head, int first, int second) {
-	struct nodeOfList *temp = (struct nodeOfList *)malloc(sizeof(struct nodeOfList));
+	struct transport *temp;
 
-	temp = get_node(head, first);
+	temp = get_node(head, first)->automobile;
 	get_node(head, first)->automobile = get_node(head, second)->automobile;
-	get_node(head, second)->automobile = temp->automobile;
+	get_node(head, second)->automobile = temp;
 }
 
 void init_list(struct ringList *initList) {
