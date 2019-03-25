@@ -2,15 +2,15 @@
 #include <malloc.h>
 #include "interfaces.h"
 
-void input_truck(struct truck *inpTruck, FILE *inpFile) {
+void input_truck(struct transport *inpTransport, FILE *inpFile) {
 
-	fscanf(inpFile, "%u %u", &(inpTruck->loadCapacity), &(inpTruck->enginePower));
+	fscanf(inpFile, "%u %u", &(inpTransport->tr.loadCapacity), &(inpTransport->enginePower));
 
 }
 
-void output_truck(struct truck *optTruck, FILE *optFile) {
+void output_truck(struct transport *optTransport, FILE *optFile) {
 
-	fprintf(optFile, "Truck\tLoad capacity: %u\tEngine power: %u\tAttitude: %lf\n", optTruck->loadCapacity, optTruck->enginePower, attitude_truck(optTruck->loadCapacity, optTruck->enginePower));
+	fprintf(optFile, "Truck\tLoad capacity: %u\tEngine power: %u\tAttitude: %lf\n", optTransport->tr.loadCapacity, optTransport->enginePower, attitude_truck(optTransport->tr.loadCapacity, optTransport->enginePower));
 
 }
 
@@ -20,15 +20,15 @@ double attitude_truck(unsigned int loadCapacity, unsigned int enginePower) {
 	
 }
 
-void input_bus(struct bus *inpBus, FILE *inpFile) {
+void input_bus(struct transport *inpTransport, FILE *inpFile) {
 
-	fscanf(inpFile, "%hu %u", &(inpBus->passCapacity), &(inpBus->enginePower));
+	fscanf(inpFile, "%hu %u", &(inpTransport->bs.passCapacity), &(inpTransport->enginePower));
 
 }
 
-void output_bus(struct bus *optBus, FILE *optFile) {
+void output_bus(struct transport *optTransport, FILE *optFile) {
 
-	fprintf(optFile, "Bus\tPassengers capacity: %hu\tEngine power: %u\tAttitude: %lf\n", optBus->passCapacity, optBus->enginePower, attitude_bus(optBus->passCapacity, optBus->enginePower));
+	fprintf(optFile, "Bus\tPassengers capacity: %hu\tEngine power: %u\tAttitude: %lf\n", optTransport->bs.passCapacity, optTransport->enginePower, attitude_bus(optTransport->bs.passCapacity, optTransport->enginePower));
 
 }
 
@@ -48,11 +48,11 @@ struct transport *input_transport(FILE *inpFile) {
 	switch (key) {
 		case 1:
 			inpTransport->key = TRUCK;
-			input_truck(&(inpTransport->tr), inpFile);
+			input_truck(inpTransport, inpFile);
 			break;
 		case 2:
 			inpTransport->key = BUS;
-			input_bus(&(inpTransport->bs), inpFile);
+			input_bus(inpTransport, inpFile);
 			break;
 		default:
 			free(inpTransport);
@@ -68,10 +68,10 @@ void output_transport(struct transport *optTransport, FILE *optFile) {
 
 	switch (optTransport->key) {
 		case TRUCK:
-			output_truck(&(optTransport->tr), optFile);
+			output_truck(optTransport, optFile);
 			break;
 		case BUS:
-			output_bus(&(optTransport->bs), optFile);
+			output_bus(optTransport, optFile);
 			break;
 		default:
 			break;
