@@ -2,36 +2,36 @@
 #include <malloc.h>
 #include "interfaces.h"
 
-void input_truck(struct truck *inpTruck, FILE *inpFile) {
+void input_truck(struct transport *inpTransport, FILE *inpFile) {
 
-	fscanf(inpFile, "%i %i", &(inpTruck->loadCapacity), &(inpTruck->enginePower));
-
-}
-
-void output_truck(struct truck *optTruck, FILE *optFile) {
-
-	fprintf(optFile, "Truck\tLoad capacity: %i\tEngine power: %i\n", optTruck->loadCapacity, optTruck->enginePower);
+	fscanf(inpFile, "%i %i", &(inpTransport->tr.loadCapacity), &(inpTransport->enginePower));
 
 }
 
-void input_bus(struct bus *inpBus, FILE *inpFile) {
+void output_truck(struct transport *optTransport, FILE *optFile) {
 
-	fscanf(inpFile, "%hu %i", &(inpBus->passCapacity), &(inpBus->enginePower));
-
-}
-
-void output_bus(struct bus *optBus, FILE *optFile) {
-
-	fprintf(optFile, "Bus\tPassengers capacity: %hu\tEngine power: %i\n", optBus->passCapacity, optBus->enginePower);
+	fprintf(optFile, "Truck\tLoad capacity: %i\tEngine power: %i\n", optTransport->tr.loadCapacity, optTransport->enginePower);
 
 }
 
-void input_car(struct car *inpCar, FILE *inpFile) {
-	fscanf(inpFile, "%hu %i %hu", &(inpCar->passCapacity), &(inpCar->enginePower), &(inpCar->maxSpeed));
+void input_bus(struct transport *inpTransport, FILE *inpFile) {
+
+	fscanf(inpFile, "%hu %i", &(inpTransport->passCapacity), &(inpTransport->enginePower));
+
 }
 
-void output_car(struct car *optCar, FILE *optFile) {
-	fprintf(optFile, "Car\tPassengers capacity: %hu\tEngine power: %i\tMax speed: %hu\n", optCar->passCapacity, optCar->enginePower, optCar->maxSpeed);
+void output_bus(struct transport *optTransport, FILE *optFile) {
+
+	fprintf(optFile, "Bus\tPassengers capacity: %hu\tEngine power: %i\n", optTransport->passCapacity, optTransport->enginePower);
+
+}
+
+void input_car(struct transport *inpTransport, FILE *inpFile) {
+	fscanf(inpFile, "%hu %i %hu", &(inpTransport->passCapacity), &(inpTransport->enginePower), &(inpTransport->cr.maxSpeed));
+}
+
+void output_car(struct transport *optTransport, FILE *optFile) {
+	fprintf(optFile, "Car\tPassengers capacity: %hu\tEngine power: %i\tMax speed: %hu\n", optTransport->passCapacity, optTransport->enginePower, optTransport->cr.maxSpeed);
 }
 
 struct transport *input_transport(FILE *inpFile) {
@@ -44,15 +44,15 @@ struct transport *input_transport(FILE *inpFile) {
 	switch (key) {
 		case 1:
 			inpTransport->key = TRUCK;
-			input_truck(&(inpTransport->tr), inpFile);
+			input_truck(inpTransport, inpFile);
 			break;
 		case 2:
 			inpTransport->key = BUS;
-			input_bus(&(inpTransport->bs), inpFile);
+			input_bus(inpTransport, inpFile);
 			break;
 		case 3:
 			inpTransport->key = CAR;
-			input_car(&(inpTransport->cr), inpFile);
+			input_car(inpTransport, inpFile);
 			break;
 		default:
 			free(inpTransport);
@@ -68,13 +68,13 @@ void output_transport(struct transport *optTransport, FILE *optFile) {
 
 	switch (optTransport->key) {
 		case TRUCK:
-			output_truck(&(optTransport->tr), optFile);
+			output_truck(optTransport, optFile);
 			break;
 		case BUS:
-			output_bus(&(optTransport->bs), optFile);
+			output_bus(optTransport, optFile);
 			break;
 		case CAR:
-			output_car(&(optTransport->cr), optFile);
+			output_car(optTransport, optFile);
 			break;
 		default:
 			break;
