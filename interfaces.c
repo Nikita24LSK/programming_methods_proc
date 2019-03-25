@@ -79,6 +79,28 @@ void output_transport(struct transport *optTransport, FILE *optFile) {
 
 }
 
+char compare_transport(struct transport *first, struct transport *second) {
+
+	double att_first, att_second;
+
+	if (first->key == TRUCK) {
+		att_first = attitude_truck(first->tr.loadCapacity, first->enginePower);
+	}
+	else {
+		att_first = attitude_bus(first->bs.passCapacity, first->enginePower);
+	}
+
+	if (second->key == TRUCK) {
+		att_second = attitude_truck(second->tr.loadCapacity, second->enginePower);
+	}
+	else {
+		att_second = attitude_bus(second->bs.passCapacity, second->enginePower);
+	}
+
+	return att_first < att_second;
+
+}
+
 char list_add_node(struct ringList *workList, FILE *inpFile) {
 
 	struct nodeOfList *addingNode = (struct nodeOfList *)malloc(sizeof(struct nodeOfList));
@@ -131,6 +153,25 @@ void clear_node(struct nodeOfList *firstNode, int offset) {
 
 }
 
+struct nodeOfList *get_node(struct nodeOfList *head, int offset) {
+	struct nodeOfList *retNode = head;
+	int i;
+
+	for (i = 0; i < offset; i++) {
+		retNode = retNode->next;
+	}
+
+	return retNode;
+}
+
+void swap_nodes(struct nodeOfList *head, int first, int second) {
+	struct nodeOfList *temp = (struct nodeOfList *)malloc(sizeof(struct nodeOfList));
+
+	temp = get_node(head, first);
+	get_node(head, first)->automobile = get_node(head, second)->automobile;
+	get_node(head, second)->automobile = temp->automobile;
+}
+
 void init_list(struct ringList *initList) {
 
 	initList->size = 0;
@@ -162,6 +203,25 @@ void fill_list(struct ringList *list, FILE *inpFile) {
 		(list->size)++;
 	}
 
+}
+
+void sort_list(struct nodeOfList *head, int left, int right) {
+	int i, last;
+
+	if (left >= right) {
+		return;
+	}
+
+	swap_nodes(head, left, (left+right)/2);
+	last = left;
+	for (i = left+1; i <= right; i++) {
+		if (compare_transport(get_node(head, i)->automobile, get_node(head, left)->automobile)) {
+			swap_nodes(head, ++last, i);
+		}
+	}
+	swap_nodes(head, left, last);
+	sort_list(head, left, last-1);
+	sort_list(head, last+1, right);
 }
 
 void out_list(struct ringList *list, FILE *optFile) {
