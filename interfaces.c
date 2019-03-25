@@ -10,19 +10,14 @@ void input_truck(struct transport *inpTransport, FILE *inpFile) {
 
 void output_truck(struct transport *optTransport, FILE *optFile) {
 
-	fprintf(optFile, "Truck\tLoad capacity: %u\tEngine power: %u\tAttitude: %lf\n", optTransport->tr.loadCapacity, optTransport->enginePower, attitude_transport(optTransport));
+	fprintf(optFile, "Truck\tLoad capacity: %u\tEngine power: %u\tAttitude: %lf\n", optTransport->tr.loadCapacity, optTransport->enginePower, attitude_truck(optTransport->tr.loadCapacity, optTransport->enginePower));
 
 }
 
-double attitude_transport(struct transport *procTransport) {
+double attitude_truck(unsigned int loadCapacity, unsigned int enginePower) {
 
-	if (procTransport->key == TRUCK) {
-		return (double)(procTransport->tr.loadCapacity)/(double)(procTransport->enginePower);
-	}
-	else {
-		return (double)((procTransport->bs.passCapacity)*75)/(double)(procTransport->enginePower);
-	}
-
+	return (double)loadCapacity/(double)enginePower;
+	
 }
 
 void input_bus(struct transport *inpTransport, FILE *inpFile) {
@@ -33,7 +28,13 @@ void input_bus(struct transport *inpTransport, FILE *inpFile) {
 
 void output_bus(struct transport *optTransport, FILE *optFile) {
 
-	fprintf(optFile, "Bus\tPassengers capacity: %hu\tEngine power: %u\tAttitude: %lf\n", optTransport->bs.passCapacity, optTransport->enginePower, attitude_transport(optTransport));
+	fprintf(optFile, "Bus\tPassengers capacity: %hu\tEngine power: %u\tAttitude: %lf\n", optTransport->bs.passCapacity, optTransport->enginePower, attitude_bus(optTransport->bs.passCapacity, optTransport->enginePower));
+
+}
+
+double attitude_bus(unsigned short passCapacity, unsigned int enginePower) {
+
+	return (double)(passCapacity*75)/(double)enginePower;
 
 }
 
@@ -80,7 +81,23 @@ void output_transport(struct transport *optTransport, FILE *optFile) {
 
 char compare_transport(struct transport *first, struct transport *second) {
 
-	return attitude_transport(first) < attitude_transport(second);
+	double att_first, att_second;
+
+	if (first->key == TRUCK) {
+		att_first = attitude_truck(first->tr.loadCapacity, first->enginePower);
+	}
+	else {
+		att_first = attitude_bus(first->bs.passCapacity, first->enginePower);
+	}
+
+	if (second->key == TRUCK) {
+		att_second = attitude_truck(second->tr.loadCapacity, second->enginePower);
+	}
+	else {
+		att_second = attitude_bus(second->bs.passCapacity, second->enginePower);
+	}
+
+	return att_first < att_second;
 
 }
 
@@ -148,11 +165,11 @@ struct nodeOfList *get_node(struct nodeOfList *head, int offset) {
 }
 
 void swap_nodes(struct nodeOfList *head, int first, int second) {
-	struct transport *temp;
+	struct nodeOfList *temp = (struct nodeOfList *)malloc(sizeof(struct nodeOfList));
 
-	temp = get_node(head, first)->automobile;
+	temp = get_node(head, first);
 	get_node(head, first)->automobile = get_node(head, second)->automobile;
-	get_node(head, second)->automobile = temp;
+	get_node(head, second)->automobile = temp->automobile;
 }
 
 void init_list(struct ringList *initList) {
