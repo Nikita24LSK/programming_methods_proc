@@ -4,25 +4,36 @@
 
 void input_truck(struct transport *inpTransport, FILE *inpFile) {
 
-	fscanf(inpFile, "%i %i", &(inpTransport->tr.loadCapacity), &(inpTransport->enginePower));
+	fscanf(inpFile, "%u %u", &(inpTransport->tr.loadCapacity), &(inpTransport->enginePower));
 
 }
 
 void output_truck(struct transport *optTransport, FILE *optFile) {
 
-	fprintf(optFile, "Truck\tLoad capacity: %i\tEngine power: %i\n", optTransport->tr.loadCapacity, optTransport->enginePower);
+	fprintf(optFile, "Truck\tLoad capacity: %u\tEngine power: %u\tAttitude: %lf\n", optTransport->tr.loadCapacity, optTransport->enginePower, attitude_transport(optTransport));
+
+}
+
+double attitude_transport(struct transport *procTransport) {
+
+	if (procTransport->key == TRUCK) {
+		return (double)(procTransport->tr.loadCapacity)/(double)(procTransport->enginePower);
+	}
+	else {
+		return (double)((procTransport->passCapacity)*75)/(double)(procTransport->enginePower);
+	}
 
 }
 
 void input_bus(struct transport *inpTransport, FILE *inpFile) {
 
-	fscanf(inpFile, "%hu %i", &(inpTransport->passCapacity), &(inpTransport->enginePower));
+	fscanf(inpFile, "%hu %u", &(inpTransport->passCapacity), &(inpTransport->enginePower));
 
 }
 
 void output_bus(struct transport *optTransport, FILE *optFile) {
 
-	fprintf(optFile, "Bus\tPassengers capacity: %hu\tEngine power: %i\n", optTransport->passCapacity, optTransport->enginePower);
+	fprintf(optFile, "Bus\tPassengers capacity: %hu\tEngine power: %u\tAttitude: %lf\n", optTransport->passCapacity, optTransport->enginePower, attitude_transport(optTransport));
 
 }
 
@@ -31,7 +42,7 @@ void input_car(struct transport *inpTransport, FILE *inpFile) {
 }
 
 void output_car(struct transport *optTransport, FILE *optFile) {
-	fprintf(optFile, "Car\tPassengers capacity: %hu\tEngine power: %i\tMax speed: %hu\n", optTransport->passCapacity, optTransport->enginePower, optTransport->cr.maxSpeed);
+	fprintf(optFile, "Car\tPassengers capacity: %hu\tEngine power: %i\tMax speed: %hu\tAttitude: %lf\n", optTransport->passCapacity, optTransport->enginePower, optTransport->cr.maxSpeed, attitude_transport(optTransport));
 }
 
 struct transport *input_transport(FILE *inpFile) {
@@ -79,6 +90,12 @@ void output_transport(struct transport *optTransport, FILE *optFile) {
 		default:
 			break;
 	}
+
+}
+
+char compare_transport(struct transport *first, struct transport *second) {
+
+	return attitude_transport(first) < attitude_transport(second);
 
 }
 
@@ -134,6 +151,25 @@ void clear_node(struct nodeOfList *firstNode, int offset) {
 
 }
 
+struct nodeOfList *get_node(struct nodeOfList *head, int offset) {
+	struct nodeOfList *retNode = head;
+	int i;
+
+	for (i = 0; i < offset; i++) {
+		retNode = retNode->next;
+	}
+
+	return retNode;
+}
+
+void swap_nodes(struct nodeOfList *head, int first, int second) {
+	struct transport *temp;
+
+	temp = get_node(head, first)->automobile;
+	get_node(head, first)->automobile = get_node(head, second)->automobile;
+	get_node(head, second)->automobile = temp;
+}
+
 void init_list(struct ringList *initList) {
 
 	initList->size = 0;
@@ -165,6 +201,25 @@ void fill_list(struct ringList *list, FILE *inpFile) {
 		(list->size)++;
 	}
 
+}
+
+void sort_list(struct nodeOfList *head, int left, int right) {
+	int i, last;
+
+	if (left >= right) {
+		return;
+	}
+
+	swap_nodes(head, left, (left+right)/2);
+	last = left;
+	for (i = left+1; i <= right; i++) {
+		if (compare_transport(get_node(head, i)->automobile, get_node(head, left)->automobile)) {
+			swap_nodes(head, ++last, i);
+		}
+	}
+	swap_nodes(head, left, last);
+	sort_list(head, left, last-1);
+	sort_list(head, last+1, right);
 }
 
 void out_list(struct ringList *list, FILE *optFile) {
