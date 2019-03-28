@@ -1,5 +1,5 @@
 all: lab_proc
-	
+
 lab_proc: main.o interfaces.o
 	gcc main.o interfaces.o -o lab_proc
 

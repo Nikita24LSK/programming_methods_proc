@@ -31,6 +31,10 @@ int main(int argc, char *argv[]) {
 	printf("Writing data\n");
 	out_list(&container, out);
 	printf("Data was written\n");
+	printf("Sorting container\n");
+	fprintf(out, "\nSorting data\n");
+	sort_list(container.head, 0, (container.size)-1);
+	out_list(&container, out);
 	printf("Clearing container\n");
 	clear_list(&container);
 	printf("Container was clear!\n");
