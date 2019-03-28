@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <malloc.h>
 #include "interfaces.h"
+#define WITH_BUS 1
+#define WITHOUT_BUS 0
 
 void input_truck(struct transport *inpTransport, FILE *inpFile) {
 
@@ -9,7 +11,7 @@ void input_truck(struct transport *inpTransport, FILE *inpFile) {
 }
 
 void output_truck(struct transport *optTransport, FILE *optFile) {
-
+	
 	fprintf(optFile, "Truck\tLoad capacity: %u\tEngine power: %u\tAttitude: %lf\tConsumption: %.3lf\n", optTransport->tr.loadCapacity, optTransport->enginePower, attitude_transport(optTransport), optTransport->consumption);
 
 }
@@ -75,14 +77,16 @@ struct transport *input_transport(FILE *inpFile) {
 
 }
 
-void output_transport(struct transport *optTransport, FILE *optFile) {
+void output_transport(struct transport *optTransport, FILE *optFile, char bus_flag) {
 
 	switch (optTransport->key) {
 		case TRUCK:
 			output_truck(optTransport, optFile);
 			break;
 		case BUS:
-			output_bus(optTransport, optFile);
+			if (bus_flag) {
+				output_bus(optTransport, optFile);
+			}
 			break;
 		case CAR:
 			output_car(optTransport, optFile);
@@ -125,7 +129,7 @@ char list_add_node(struct ringList *workList, FILE *inpFile) {
 
 }
 
-void output_node(struct nodeOfList *firstNode, int offset, FILE *optFile) {
+void output_node(struct nodeOfList *firstNode, int offset, FILE *optFile, char bus_flag) {
 
 	struct nodeOfList *curNode = firstNode;
 	int i;
@@ -134,7 +138,7 @@ void output_node(struct nodeOfList *firstNode, int offset, FILE *optFile) {
 		curNode = curNode->next;
 	}
 
-	output_transport(curNode->automobile, optFile);
+	output_transport(curNode->automobile, optFile, bus_flag);
 
 }
 
@@ -232,7 +236,13 @@ void out_list(struct ringList *list, FILE *optFile) {
 	}
 
 	for (i = 0; i < list->size; i++) {
-		output_node(list->head, i, optFile);
+		output_node(list->head, i, optFile, WITH_BUS);
+	}
+
+	fprintf(optFile, "\nWithout bus\n");
+
+	for (i = 0; i < list->size; i++) {
+		output_node(list->head, i, optFile, WITHOUT_BUS);
 	}
 
 }
