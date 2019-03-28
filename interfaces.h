@@ -8,11 +8,11 @@ struct car {
 	short maxSpeed;
 };
 
-
 struct transport {
 	enum typeOfTransport key;
 	short passCapacity;
 	unsigned int enginePower;
+	double consumption;
 	union
 	{
 		struct truck tr;

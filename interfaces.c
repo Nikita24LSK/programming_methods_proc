@@ -4,13 +4,13 @@
 
 void input_truck(struct transport *inpTransport, FILE *inpFile) {
 
-	fscanf(inpFile, "%u %u", &(inpTransport->tr.loadCapacity), &(inpTransport->enginePower));
+	fscanf(inpFile, "%i %i %lf", &(inpTransport->tr.loadCapacity), &(inpTransport->enginePower), &(inpTransport->consumption));
 
 }
 
 void output_truck(struct transport *optTransport, FILE *optFile) {
 
-	fprintf(optFile, "Truck\tLoad capacity: %u\tEngine power: %u\tAttitude: %lf\n", optTransport->tr.loadCapacity, optTransport->enginePower, attitude_transport(optTransport));
+	fprintf(optFile, "Truck\tLoad capacity: %u\tEngine power: %u\tAttitude: %lf\tConsumption: %.3lf\n", optTransport->tr.loadCapacity, optTransport->enginePower, attitude_transport(optTransport), optTransport->consumption);
 
 }
 
@@ -27,22 +27,22 @@ double attitude_transport(struct transport *procTransport) {
 
 void input_bus(struct transport *inpTransport, FILE *inpFile) {
 
-	fscanf(inpFile, "%hu %u", &(inpTransport->passCapacity), &(inpTransport->enginePower));
+	fscanf(inpFile, "%hu %u %lf", &(inpTransport->passCapacity), &(inpTransport->enginePower), &(inpTransport->consumption));
 
 }
 
 void output_bus(struct transport *optTransport, FILE *optFile) {
 
-	fprintf(optFile, "Bus\tPassengers capacity: %hu\tEngine power: %u\tAttitude: %lf\n", optTransport->passCapacity, optTransport->enginePower, attitude_transport(optTransport));
+	fprintf(optFile, "Bus\tPassengers capacity: %hu\tEngine power: %u\tAttitude: %lf\tConsumption: %.3lf\n", optTransport->passCapacity, optTransport->enginePower, attitude_transport(optTransport), optTransport->consumption);
 
 }
 
 void input_car(struct transport *inpTransport, FILE *inpFile) {
-	fscanf(inpFile, "%hu %i %hu", &(inpTransport->passCapacity), &(inpTransport->enginePower), &(inpTransport->cr.maxSpeed));
+	fscanf(inpFile, "%hu %i %hu %lf", &(inpTransport->passCapacity), &(inpTransport->enginePower), &(inpTransport->cr.maxSpeed), &(inpTransport->consumption));
 }
 
 void output_car(struct transport *optTransport, FILE *optFile) {
-	fprintf(optFile, "Car\tPassengers capacity: %hu\tEngine power: %i\tMax speed: %hu\tAttitude: %lf\n", optTransport->passCapacity, optTransport->enginePower, optTransport->cr.maxSpeed, attitude_transport(optTransport));
+	fprintf(optFile, "Car\tPassengers capacity: %hu\tEngine power: %i\tMax speed: %hu\tAttitude: %lf\tConsumption: %.3lf\n", optTransport->passCapacity, optTransport->enginePower, optTransport->cr.maxSpeed, attitude_transport(optTransport), optTransport->consumption);
 }
 
 struct transport *input_transport(FILE *inpFile) {
