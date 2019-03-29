@@ -115,6 +115,7 @@ char list_add_node(struct RingList *workList, FILE *inpFile) {
 
 	if (addingNode->automobile == NULL) {
 		free(addingNode);
+
 		return 0;
 	}
 
@@ -244,6 +245,7 @@ void out_list(struct RingList *list, FILE *optFile) {
 
 	if (list->size == 0) {
 		printf("List is empty!\n");
+		
 		return;
 	}
 

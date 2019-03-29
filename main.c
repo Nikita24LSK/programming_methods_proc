@@ -7,16 +7,19 @@ int main(int argc, char *argv[]) {
 
 	if (argc != 3) {
 		printf("\nUsage lab_proc <input_file> <output_file>\n");
+
 		return 1;
 	}
 
 	if ((inp = fopen(argv[1], "r")) == NULL) {
 		printf("\nCould not to open input file!\n");
+
 		return 1;
 	}
 
 	if ((out = fopen(argv[2], "w")) == NULL) {
 		printf("\nCould not to open output file!\n");
+		
 		return 1;
 	}
 
