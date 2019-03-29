@@ -22,7 +22,7 @@ int main(int argc, char *argv[]) {
 
 	printf("\nStart\n");
 	
-	struct ringList container;
+	struct RingList container;
 	init_list(&container);
 
 	printf("Filling list\n");

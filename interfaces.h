@@ -1,52 +1,52 @@
 enum typeOfTransport {TRUCK, BUS, CAR};
 
-struct truck {
+struct Truck {
 	int loadCapacity;
 };
 
-struct car {
+struct Car {
 	short maxSpeed;
 };
 
-struct transport {
+struct Transport {
 	enum typeOfTransport key;
 	short passCapacity;
 	unsigned int enginePower;
 	double consumption;
 	union
 	{
-		struct truck tr;
-		struct car cr;
+		struct Truck tr;
+		struct Car cr;
 	};
 };
 
-struct nodeOfList {
-	struct transport *automobile;
-	struct nodeOfList *next;
-	struct nodeOfList *prev;
+struct NodeOfList {
+	struct Transport *automobile;
+	struct NodeOfList *next;
+	struct NodeOfList *prev;
 };
 
-struct ringList {
+struct RingList {
 	long size;
-	struct nodeOfList *head;
+	struct NodeOfList *head;
 };
 
-void input_truck(struct transport *, FILE *);
-void output_truck(struct transport *, FILE *);
-void input_bus(struct transport *, FILE *);
-void output_bus(struct transport *, FILE *);
-void input_car(struct transport *, FILE *);
-void output_car(struct transport *, FILE *);
-double attitude_transport(struct transport *);
-struct transport *input_transport(FILE *);
-char compare_transport(struct transport *, struct transport *);
-void output_transport(struct transport *, FILE *, char );
-char list_add_node(struct ringList *, FILE *);
-void output_node(struct nodeOfList *, int , FILE *, char );
-struct nodeOfList *get_node(struct nodeOfList *, int );
-void swap_nodes(struct nodeOfList *, int , int );
-void init_list(struct ringList *);
-void clear_list(struct ringList *);
-void fill_list(struct ringList *, FILE *);
-void sort_list(struct nodeOfList *, int , int );
-void out_list(struct ringList *, FILE *);
+void input_truck(struct Transport *, FILE *);
+void output_truck(struct Transport *, FILE *);
+void input_bus(struct Transport *, FILE *);
+void output_bus(struct Transport *, FILE *);
+void input_car(struct Transport *, FILE *);
+void output_car(struct Transport *, FILE *);
+double attitude_transport(struct Transport *);
+struct Transport *input_transport(FILE *);
+char compare_transport(struct Transport *, struct Transport *);
+void output_transport(struct Transport *, FILE *, char );
+char list_add_node(struct RingList *, FILE *);
+void output_node(struct NodeOfList *, int , FILE *, char );
+struct NodeOfList *get_node(struct NodeOfList *, int );
+void swap_nodes(struct NodeOfList *, int , int );
+void init_list(struct RingList *);
+void clear_list(struct RingList *);
+void fill_list(struct RingList *, FILE *);
+void sort_list(struct NodeOfList *, int , int );
+void out_list(struct RingList *, FILE *);

@@ -4,19 +4,19 @@
 #define WITH_BUS 1
 #define WITHOUT_BUS 0
 
-void input_truck(struct transport *inpTransport, FILE *inpFile) {
+void input_truck(struct Transport *inpTransport, FILE *inpFile) {
 
 	fscanf(inpFile, "%i %i %lf", &(inpTransport->tr.loadCapacity), &(inpTransport->enginePower), &(inpTransport->consumption));
 
 }
 
-void output_truck(struct transport *optTransport, FILE *optFile) {
+void output_truck(struct Transport *optTransport, FILE *optFile) {
 	
 	fprintf(optFile, "Truck\tLoad capacity: %u\tEngine power: %u\tAttitude: %.3lf\tConsumption: %.3lf\n", optTransport->tr.loadCapacity, optTransport->enginePower, attitude_transport(optTransport), optTransport->consumption);
 
 }
 
-double attitude_transport(struct transport *procTransport) {
+double attitude_transport(struct Transport *procTransport) {
 
 	if (procTransport->key == TRUCK) {
 		return (double)(procTransport->tr.loadCapacity)/(double)(procTransport->enginePower);
@@ -24,32 +24,37 @@ double attitude_transport(struct transport *procTransport) {
 	else {
 		return (double)((procTransport->passCapacity)*75)/(double)(procTransport->enginePower);
 	}
+
 }
 
-void input_bus(struct transport *inpTransport, FILE *inpFile) {
+void input_bus(struct Transport *inpTransport, FILE *inpFile) {
 
 	fscanf(inpFile, "%hu %u %lf", &(inpTransport->passCapacity), &(inpTransport->enginePower), &(inpTransport->consumption));
 
 }
 
-void output_bus(struct transport *optTransport, FILE *optFile) {
+void output_bus(struct Transport *optTransport, FILE *optFile) {
 
 	fprintf(optFile, "Bus\tPassengers capacity: %hu\tEngine power: %u\tAttitude: %.3lf\tConsumption: %.3lf\n", optTransport->passCapacity, optTransport->enginePower, attitude_transport(optTransport), optTransport->consumption);
 
 }
 
-void input_car(struct transport *inpTransport, FILE *inpFile) {
+void input_car(struct Transport *inpTransport, FILE *inpFile) {
+
 	fscanf(inpFile, "%hu %i %hu %lf", &(inpTransport->passCapacity), &(inpTransport->enginePower), &(inpTransport->cr.maxSpeed), &(inpTransport->consumption));
+
 }
 
 
-void output_car(struct transport *optTransport, FILE *optFile) {
+void output_car(struct Transport *optTransport, FILE *optFile) {
+
 	fprintf(optFile, "Car\tPassengers capacity: %hu\tEngine power: %i\tMax speed: %hu\tAttitude: %.3lf\tConsumption: %.3lf\n", optTransport->passCapacity, optTransport->enginePower, optTransport->cr.maxSpeed, attitude_transport(optTransport), optTransport->consumption);
+
 }
 
-struct transport *input_transport(FILE *inpFile) {
+struct Transport *input_transport(FILE *inpFile) {
 
-	struct transport *inpTransport = (struct transport *)malloc(sizeof(struct transport));
+	struct Transport *inpTransport = (struct Transport *)malloc(sizeof(struct Transport));
 	int key;
 
 	fscanf(inpFile, "%i", &key);
@@ -77,7 +82,7 @@ struct transport *input_transport(FILE *inpFile) {
 
 }
 
-void output_transport(struct transport *optTransport, FILE *optFile, char bus_flag) {
+void output_transport(struct Transport *optTransport, FILE *optFile, char bus_flag) {
 
 	switch (optTransport->key) {
 		case TRUCK:
@@ -97,15 +102,15 @@ void output_transport(struct transport *optTransport, FILE *optFile, char bus_fl
 
 }
 
-char compare_transport(struct transport *first, struct transport *second) {
+char compare_transport(struct Transport *first, struct Transport *second) {
 
 	return attitude_transport(first) < attitude_transport(second);
 
 }
 
-char list_add_node(struct ringList *workList, FILE *inpFile) {
+char list_add_node(struct RingList *workList, FILE *inpFile) {
 
-	struct nodeOfList *addingNode = (struct nodeOfList *)malloc(sizeof(struct nodeOfList));
+	struct NodeOfList *addingNode = (struct NodeOfList *)malloc(sizeof(struct NodeOfList));
 	addingNode->automobile = input_transport(inpFile);
 
 	if (addingNode->automobile == NULL) {
@@ -129,9 +134,9 @@ char list_add_node(struct ringList *workList, FILE *inpFile) {
 
 }
 
-void output_node(struct nodeOfList *firstNode, int offset, FILE *optFile, char bus_flag) {
+void output_node(struct NodeOfList *firstNode, int offset, FILE *optFile, char bus_flag) {
 
-	struct nodeOfList *curNode = firstNode;
+	struct NodeOfList *curNode = firstNode;
 	int i;
 
 	for (i = 0; i < offset; i++) {
@@ -142,9 +147,10 @@ void output_node(struct nodeOfList *firstNode, int offset, FILE *optFile, char b
 
 }
 
-void clear_node(struct nodeOfList *firstNode, int offset) {
+void clear_node(struct NodeOfList *firstNode, int offset) {
+
 	int i;
-	struct nodeOfList *curNode = firstNode;
+	struct NodeOfList *curNode = firstNode;
 
 	for (i = 0; i < offset-1; i++) {
 		curNode = curNode->next;
@@ -155,8 +161,9 @@ void clear_node(struct nodeOfList *firstNode, int offset) {
 
 }
 
-struct nodeOfList *get_node(struct nodeOfList *head, int offset) {
-	struct nodeOfList *retNode = head;
+struct NodeOfList *get_node(struct NodeOfList *head, int offset) {
+
+	struct NodeOfList *retNode = head;
 	int i;
 
 	for (i = 0; i < offset; i++) {
@@ -166,22 +173,24 @@ struct nodeOfList *get_node(struct nodeOfList *head, int offset) {
 	return retNode;
 }
 
-void swap_nodes(struct nodeOfList *head, int first, int second) {
-	struct transport *temp;
+void swap_nodes(struct NodeOfList *head, int first, int second) {
+
+	struct Transport *temp;
 
 	temp = get_node(head, first)->automobile;
 	get_node(head, first)->automobile = get_node(head, second)->automobile;
 	get_node(head, second)->automobile = temp;
+
 }
 
-void init_list(struct ringList *initList) {
+void init_list(struct RingList *initList) {
 
 	initList->size = 0;
 	initList->head = NULL;
 
 }
 
-void clear_list(struct ringList *clearingList) {
+void clear_list(struct RingList *clearingList) {
 
 	int i;
 
@@ -199,7 +208,7 @@ void clear_list(struct ringList *clearingList) {
 
 }
 
-void fill_list(struct ringList *list, FILE *inpFile) {
+void fill_list(struct RingList *list, FILE *inpFile) {
 
 	while(list_add_node(list, inpFile)) {
 		(list->size)++;
@@ -207,7 +216,8 @@ void fill_list(struct ringList *list, FILE *inpFile) {
 
 }
 
-void sort_list(struct nodeOfList *head, int left, int right) {
+void sort_list(struct NodeOfList *head, int left, int right) {
+
 	int i, last;
 
 	if (left >= right) {
@@ -221,12 +231,14 @@ void sort_list(struct nodeOfList *head, int left, int right) {
 			swap_nodes(head, ++last, i);
 		}
 	}
+
 	swap_nodes(head, left, last);
 	sort_list(head, left, last-1);
 	sort_list(head, last+1, right);
+	
 }
 
-void out_list(struct ringList *list, FILE *optFile) {
+void out_list(struct RingList *list, FILE *optFile) {
 
 	int i;
 
