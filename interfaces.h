@@ -1,3 +1,16 @@
+/*
+
+	Заголовочный файл с описанием структур, используемых
+	в программе, и прототипов функций.
+
+	Задается три вида транспорта - грузовик, автобус и автомобиль.
+	
+	Для хранения данных используется кольцевой двусвязный список,
+	который поддерживает функцию сортировки по вычисляемому параметру -
+	отношению грузоподъемности к мощности двигателя.
+
+*/
+
 enum typeOfTransport {TRUCK, BUS, CAR};
 
 struct Truck {
@@ -37,7 +50,7 @@ void input_bus(struct Transport *, FILE *);
 void output_bus(struct Transport *, FILE *);
 void input_car(struct Transport *, FILE *);
 void output_car(struct Transport *, FILE *);
-double attitude_transport(struct Transport *);
+double quotient_transport(struct Transport *);
 struct Transport *input_transport(FILE *);
 char compare_transport(struct Transport *, struct Transport *);
 void output_transport(struct Transport *, FILE *, char );
