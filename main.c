@@ -34,7 +34,12 @@ int main(int argc, char *argv[]) {
 
 	// Заполняем контейнер - считываем данные из входного файла
 	printf("Filling list\n");
-	fill_list(&container, inp);
+	if (fill_list(&container, inp)) {
+		fclose(inp);
+		fclose(out);
+
+		return 1;
+	}
 	printf("List was fill\n");
 
 	// Записываем данные в выходной файл

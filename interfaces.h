@@ -44,11 +44,13 @@ struct RingList {
 	struct NodeOfList *head;
 };
 
-void input_truck(struct Transport *, FILE *);
+char int_validator_of_input(int *, FILE *);
+char double_validator_of_input(double *, FILE *);
+char input_truck(struct Transport *, FILE *);
 void output_truck(struct Transport *, FILE *);
-void input_bus(struct Transport *, FILE *);
+char input_bus(struct Transport *, FILE *);
 void output_bus(struct Transport *, FILE *);
-void input_car(struct Transport *, FILE *);
+char input_car(struct Transport *, FILE *);
 void output_car(struct Transport *, FILE *);
 double quotient_transport(struct Transport *);
 struct Transport *input_transport(FILE *);
@@ -60,6 +62,6 @@ struct NodeOfList *get_node(struct NodeOfList *, int );
 void swap_nodes(struct NodeOfList *, int , int );
 void init_list(struct RingList *);
 void clear_list(struct RingList *);
-void fill_list(struct RingList *, FILE *);
+char fill_list(struct RingList *, FILE *);
 void sort_list(struct NodeOfList *, int , int );
 void out_list(struct RingList *, FILE *);

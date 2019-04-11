@@ -1,12 +1,65 @@
 #include <stdio.h>
 #include <malloc.h>
+#include <stdlib.h>
 #include "interfaces.h"
 #define WITH_BUS 1
 #define WITHOUT_BUS 0
+#define INPUT_INT 0
+#define INPUT_DOUBLE 1
 
-void input_truck(struct Transport *inpTransport, FILE *inpFile) {
+char int_validator_of_input(int *inputField, FILE *inpFile) {
+	char inp_str[255];
+	int temp_val;
 
-	fscanf(inpFile, "%i %i %lf", &(inpTransport->tr.loadCapacity), &(inpTransport->enginePower), &(inpTransport->consumption));
+	if (fscanf(inpFile, "%254s", inp_str) == EOF) {
+		printf("Error! Unexpected end of input!\n");
+		return 1;
+	}
+	temp_val = atoi(inp_str);
+	if (!temp_val) {
+		printf("Error! Invalid input data: %s\n", inp_str);
+		return 1;
+	}
+
+	*inputField = temp_val;
+
+	return 0;
+}
+
+char double_validator_of_input(double *inputField, FILE *inpFile) {
+	char inp_str[255];
+	double temp_val;
+
+	if (fscanf(inpFile, "%254s", inp_str) == EOF) {
+		printf("Error! Unexpected end of input!\n");
+		return 1;
+	}
+	temp_val = atof(inp_str);
+	if (!temp_val) {
+		printf("Error! Invalid input data: %s\n", inp_str);
+		return 1;
+	}
+
+	*inputField = temp_val;
+
+	return 0;
+}
+
+char input_truck(struct Transport *inpTransport, FILE *inpFile) {
+
+	if (int_validator_of_input(&(inpTransport->tr.loadCapacity), inpFile)) {
+		return 1;
+	}
+	
+	if (int_validator_of_input(&(inpTransport->enginePower), inpFile)) {
+		return 1;
+	}
+
+	if (double_validator_of_input(&(inpTransport->consumption), inpFile)) {
+		return 1;
+	}
+
+	return 0;
 
 }
 
@@ -27,9 +80,21 @@ double quotient_transport(struct Transport *procTransport) {
 
 }
 
-void input_bus(struct Transport *inpTransport, FILE *inpFile) {
+char input_bus(struct Transport *inpTransport, FILE *inpFile) {
 
-	fscanf(inpFile, "%hu %u %lf", &(inpTransport->passCapacity), &(inpTransport->enginePower), &(inpTransport->consumption));
+	if (int_validator_of_input(&(inpTransport->passCapacity), inpFile)) {
+		return 1;
+	}
+
+	if (int_validator_of_input(&(inpTransport->enginePower), inpFile)) {
+		return 1;
+	}
+
+	if (double_validator_of_input(&(inpTransport->consumption), inpFile)) {
+		return 1;
+	}
+
+	return 0;
 
 }
 
@@ -39,9 +104,25 @@ void output_bus(struct Transport *optTransport, FILE *optFile) {
 
 }
 
-void input_car(struct Transport *inpTransport, FILE *inpFile) {
+char input_car(struct Transport *inpTransport, FILE *inpFile) {
 
-	fscanf(inpFile, "%hu %i %hu %lf", &(inpTransport->passCapacity), &(inpTransport->enginePower), &(inpTransport->cr.maxSpeed), &(inpTransport->consumption));
+	if (int_validator_of_input(&(inpTransport->passCapacity), inpFile)) {
+		return 1;
+	}
+
+	if (int_validator_of_input(&(inpTransport->enginePower), inpFile)) {
+		return 1;
+	}
+
+	if (int_validator_of_input(&(inpTransport->cr.maxSpeed), inpFile)) {
+		return 1;
+	}
+
+	if (double_validator_of_input(&(inpTransport->consumption), inpFile)) {
+		return 1;
+	}
+
+	return 0;
 
 }
 
@@ -57,25 +138,36 @@ struct Transport *input_transport(FILE *inpFile) {
 	struct Transport *inpTransport = (struct Transport *)malloc(sizeof(struct Transport));
 	int key;
 
-	fscanf(inpFile, "%i", &key);
+	if (fscanf(inpFile, "%i", &key) == EOF) {
+		return NULL;
+	}
 
 	switch (key) {
 		case 1:
 			inpTransport->key = TRUCK;
-			input_truck(inpTransport, inpFile);
+			if (input_truck(inpTransport, inpFile)) {
+				free(inpTransport);
+				return inpTransport = -1;
+			}
 			break;
 		case 2:
 			inpTransport->key = BUS;
-			input_bus(inpTransport, inpFile);
+			if (input_bus(inpTransport, inpFile)) {
+				free(inpTransport);
+				return -1;
+			}
 			break;
 		case 3:
 			inpTransport->key = CAR;
-			input_car(inpTransport, inpFile);
+			if (input_car(inpTransport, inpFile)) {
+				free(inpTransport);
+				return -1;
+			}
 			break;
 		default:
+			printf("Error! Invalid key: %i\n", key);
 			free(inpTransport);
-			inpTransport = NULL;
-			break;
+			return -1;
 	}
 
 	return inpTransport;
@@ -112,6 +204,12 @@ char list_add_node(struct RingList *workList, FILE *inpFile) {
 
 	struct NodeOfList *addingNode = (struct NodeOfList *)malloc(sizeof(struct NodeOfList));
 	addingNode->automobile = input_transport(inpFile);
+
+	if (addingNode->automobile == -1) {
+		free(addingNode);
+
+		return -1;
+	}
 
 	if (addingNode->automobile == NULL) {
 		free(addingNode);
@@ -209,11 +307,24 @@ void clear_list(struct RingList *clearingList) {
 
 }
 
-void fill_list(struct RingList *list, FILE *inpFile) {
+char fill_list(struct RingList *list, FILE *inpFile) {
 
-	while(list_add_node(list, inpFile)) {
-		(list->size)++;
+	if (list->head != NULL) {
+		printf("\nError! List is not empty!\n");
+		return 0;
 	}
+
+	char status = list_add_node(list, inpFile);
+
+	while(status) {
+		if (status == -1) {
+			return 1;
+		}
+		(list->size)++;
+		status = list_add_node(list, inpFile);
+	}
+
+	return 0;
 
 }
 
