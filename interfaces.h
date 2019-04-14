@@ -65,3 +65,4 @@ void clear_list(struct RingList *);
 char fill_list(struct RingList *, FILE *);
 void sort_list(struct NodeOfList *, int , int );
 char out_list(struct RingList *, FILE *);
+void multimethod(struct RingList *, FILE *);

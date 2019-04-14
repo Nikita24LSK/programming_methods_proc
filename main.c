@@ -55,6 +55,10 @@ int main(int argc, char *argv[]) {
 	// Записываем отсортированные данные в файл
 	out_list(&container, out);
 
+	// Вызываем мультиметод
+	printf("Calling multimethod\n");
+	multimethod(&container, out);
+
 	// Очищаем контейнер
 	printf("Clearing container\n");
 	clear_list(&container);

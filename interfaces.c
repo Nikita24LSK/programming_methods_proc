@@ -392,3 +392,77 @@ char out_list(struct RingList *list, FILE *optFile) {
 	return errorFlag;
 
 }
+
+void multimethod(struct RingList *container, FILE *out) {
+
+	int i, j;
+	struct NodeOfList *curNode;
+
+	fprintf(out, "Multimethod:\n");
+
+	for (i=0; i < container->size; i++) {
+		for (j=i+1; j < container->size; j++) {
+			curNode = get_node(container->head, i);
+			switch (curNode->automobile->key) {
+				case 0:
+					curNode = get_node(container->head, j);
+					switch (curNode->automobile->key) {
+						case 0:
+							fprintf(out, "Truck and truck\n");
+							break;
+						case 1:
+							fprintf(out, "Truck and bus\n");
+							break;
+						case 2:
+							fprintf(out, "Truck and car\n");
+							break;
+						default:
+							fprintf(out, "Unknown key\n");
+							break;
+					}
+					break;
+				case 1:
+					curNode = get_node(container->head, j);
+					switch (curNode->automobile->key) {
+						case 0:
+							fprintf(out, "Bus and truck\n");
+							break;
+						case 1:
+							fprintf(out, "Bus and bus\n");
+							break;
+						case 2:
+							fprintf(out, "Bus and car\n");
+							break;
+						default:
+							fprintf(out, "Unknown key\n");
+							break;
+					}
+					break;
+				case 2:
+					curNode = get_node(container->head, j);
+					switch (curNode->automobile->key) {
+						case 0:
+							fprintf(out, "Car and truck\n");
+							break;
+						case 1:
+							fprintf(out, "Car and bus\n");
+							break;
+						case 2:
+							fprintf(out, "Car and car\n");
+							break;
+						default:
+							fprintf(out, "Unknown key\n");
+							break;
+					}
+					break;
+				default:
+					fprintf(out, "Unknown key\n");
+					break;
+			}
+
+			output_node(container->head, i, out, WITH_BUS);
+			output_node(container->head, j, out, WITH_BUS);
+		}
+	}
+
+}
