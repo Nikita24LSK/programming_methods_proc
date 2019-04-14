@@ -63,9 +63,9 @@ char input_truck(struct Transport *inpTransport, FILE *inpFile) {
 
 }
 
-void output_truck(struct Transport *optTransport, FILE *optFile) {
+char output_truck(struct Transport *optTransport, FILE *optFile) {
 	
-	fprintf(optFile, "Truck\tLoad capacity: %u\tEngine power: %u\tQuotient: %.3lf\tConsumption: %.3lf\n", optTransport->tr.loadCapacity, optTransport->enginePower, quotient_transport(optTransport), optTransport->consumption);
+	return fprintf(optFile, "Truck\tLoad capacity: %u\tEngine power: %u\tQuotient: %.3lf\tConsumption: %.3lf\n", optTransport->tr.loadCapacity, optTransport->enginePower, quotient_transport(optTransport), optTransport->consumption);
 
 }
 
@@ -98,9 +98,9 @@ char input_bus(struct Transport *inpTransport, FILE *inpFile) {
 
 }
 
-void output_bus(struct Transport *optTransport, FILE *optFile) {
+char output_bus(struct Transport *optTransport, FILE *optFile) {
 
-	fprintf(optFile, "Bus\tPassengers capacity: %hu\tEngine power: %u\tQuotient: %.3lf\tConsumption: %.3lf\n", optTransport->passCapacity, optTransport->enginePower, quotient_transport(optTransport), optTransport->consumption);
+	return fprintf(optFile, "Bus\tPassengers capacity: %hu\tEngine power: %u\tQuotient: %.3lf\tConsumption: %.3lf\n", optTransport->passCapacity, optTransport->enginePower, quotient_transport(optTransport), optTransport->consumption);
 
 }
 
@@ -127,9 +127,9 @@ char input_car(struct Transport *inpTransport, FILE *inpFile) {
 }
 
 
-void output_car(struct Transport *optTransport, FILE *optFile) {
+char output_car(struct Transport *optTransport, FILE *optFile) {
 
-	fprintf(optFile, "Car\tPassengers capacity: %hu\tEngine power: %i\tMax speed: %hu\tQuotient: %.3lf\tConsumption: %.3lf\n", optTransport->passCapacity, optTransport->enginePower, optTransport->cr.maxSpeed, quotient_transport(optTransport), optTransport->consumption);
+	return fprintf(optFile, "Car\tPassengers capacity: %hu\tEngine power: %i\tMax speed: %hu\tQuotient: %.3lf\tConsumption: %.3lf\n", optTransport->passCapacity, optTransport->enginePower, optTransport->cr.maxSpeed, quotient_transport(optTransport), optTransport->consumption);
 
 }
 
@@ -174,23 +174,31 @@ struct Transport *input_transport(FILE *inpFile) {
 
 }
 
-void output_transport(struct Transport *optTransport, FILE *optFile, char busFlag) {
+char output_transport(struct Transport *optTransport, FILE *optFile, char busFlag) {
 
 	switch (optTransport->key) {
 		case TRUCK:
-			output_truck(optTransport, optFile);
+			if (output_truck(optTransport, optFile) < 0) {
+				return 1;
+			}
 			break;
 		case BUS:
 			if (busFlag) {
-				output_bus(optTransport, optFile);
+				if (output_bus(optTransport, optFile) < 0) {
+					return 1;
+				}
 			}
 			break;
 		case CAR:
-			output_car(optTransport, optFile);
+			if (output_car(optTransport, optFile) < 0) {
+				return 1;
+			}
 			break;
 		default:
 			break;
 	}
+
+	return 0;
 
 }
 
@@ -233,7 +241,7 @@ char list_add_node(struct RingList *workList, FILE *inpFile) {
 
 }
 
-void output_node(struct NodeOfList *firstNode, int offset, FILE *optFile, char busFlag) {
+char output_node(struct NodeOfList *firstNode, int offset, FILE *optFile, char busFlag) {
 
 	struct NodeOfList *curNode = firstNode;
 	int i;
@@ -242,7 +250,13 @@ void output_node(struct NodeOfList *firstNode, int offset, FILE *optFile, char b
 		curNode = curNode->next;
 	}
 
-	output_transport(curNode->automobile, optFile, busFlag);
+	if (output_transport(curNode->automobile, optFile, busFlag)) {
+		printf("Cannot to out transport!\n");
+
+		return 1;
+	}
+
+	return 0;
 
 }
 
@@ -350,24 +364,31 @@ void sort_list(struct NodeOfList *head, int left, int right) {
 	
 }
 
-void out_list(struct RingList *list, FILE *optFile) {
+char out_list(struct RingList *list, FILE *optFile) {
 
 	int i;
+	char errorFlag = 0;
 
 	if (list->size == 0) {
 		printf("List is empty!\n");
 		
-		return;
+		return errorFlag;
 	}
 
 	for (i=0; i < list->size; i++) {
-		output_node(list->head, i, optFile, WITH_BUS);
+		if (output_node(list->head, i, optFile, WITH_BUS)) {
+			errorFlag = 1;
+		}
 	}
 
 	fprintf(optFile, "\nWithout bus\n");
 
 	for (i=0; i < list->size; i++) {
-		output_node(list->head, i, optFile, WITHOUT_BUS);
+		if (output_node(list->head, i, optFile, WITHOUT_BUS)) {
+			errorFlag = 1;
+		}
 	}
+
+	return errorFlag;
 
 }
