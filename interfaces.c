@@ -166,3 +166,65 @@ void out_list(struct ringList *list, FILE *optFile) {
 	}
 
 }
+
+struct nodeOfList *get_node(struct nodeOfList *head, int offset) {
+
+	struct nodeOfList *retNode = head;
+	int i;
+
+	for (i=0; i < offset; i++) {
+		retNode = retNode->next;
+	}
+
+	return retNode;
+}
+
+void multimethod(struct ringList *container, FILE *out) {
+
+	int i, j;
+	struct nodeOfList *curNode;
+
+	fprintf(out, "Multimethod:\n");
+
+	for (i=0; i < container->size; i++) {
+		for (j=i+1; j < container->size; j++) {
+			curNode = get_node(container->head, i);
+			switch (curNode->automobile->key) {
+				case 0:
+					curNode = get_node(container->head, j);
+					switch (curNode->automobile->key) {
+						case 0:
+							fprintf(out, "Truck and truck\n");
+							break;
+						case 1:
+							fprintf(out, "Truck and bus\n");
+							break;
+						default:
+							fprintf(out, "Unknown key\n");
+							break;
+					}
+					break;
+				case 1:
+					curNode = get_node(container->head, j);
+					switch (curNode->automobile->key) {
+						case 0:
+							fprintf(out, "Bus and truck\n");
+							break;
+						case 1:
+							fprintf(out, "Bus and bus\n");
+							break;
+						default:
+							fprintf(out, "Unknown key\n");
+							break;
+					}
+					break;
+				default:
+					fprintf(out, "Unknown key\n");
+					break;
+			}
+			output_node(container->head, i, out);
+			output_node(container->head, j, out);
+		}
+	}
+
+}

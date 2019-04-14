@@ -41,3 +41,5 @@ void init_list(struct ringList *);
 void clear_list(struct ringList *);
 void fill_list(struct ringList *, FILE *);
 void out_list(struct ringList *, FILE *);
+struct nodeOfList *get_node(struct nodeOfList *, int );
+void multimethod(struct ringList *, FILE *);

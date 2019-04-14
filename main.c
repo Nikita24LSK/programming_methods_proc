@@ -30,6 +30,8 @@ int main(int argc, char *argv[]) {
 	printf("List was fill\n");
 	printf("Writing data\n");
 	out_list(&container, out);
+	printf("Calling multimethod\n");
+	multimethod(&container, out);
 	printf("Data was written\n");
 	printf("Clearing container\n");
 	clear_list(&container);
